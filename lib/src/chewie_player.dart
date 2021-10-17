@@ -225,6 +225,7 @@ class ChewieController extends ChangeNotifier {
     this.aspectRatio,
     this.autoInitialize = false,
     this.autoPlay = false,
+    this.draggableProgressBar = true,
     this.startAt,
     this.looping = false,
     this.fullScreenByDefault = false,
@@ -263,6 +264,7 @@ class ChewieController extends ChangeNotifier {
     double? aspectRatio,
     bool? autoInitialize,
     bool? autoPlay,
+    bool? draggableProgressBar,
     Duration? startAt,
     bool? looping,
     bool? fullScreenByDefault,
@@ -294,6 +296,7 @@ class ChewieController extends ChangeNotifier {
         routePageBuilder,
   }) {
     return ChewieController(
+      draggableProgressBar: draggableProgressBar ?? this.draggableProgressBar,
       videoPlayerController:
           videoPlayerController ?? this.videoPlayerController,
       optionsTranslation: optionsTranslation ?? this.optionsTranslation,
@@ -378,6 +381,9 @@ class ChewieController extends ChangeNotifier {
 
   /// Play the video as soon as it's displayed
   final bool autoPlay;
+
+  /// Non-Draggable Progress Bar
+  final bool draggableProgressBar;
 
   /// Start video at a certain position
   final Duration? startAt;
