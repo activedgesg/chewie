@@ -24,72 +24,76 @@ class CenterPlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          // Always set the iconSize on the IconButton, not on the Icon itself:
-          // https://github.com/flutter/flutter/issues/52980
-          child: isPlaying
-              ? AnimatedOpacity(
-                  opacity: show ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: IconButton(
-                    iconSize: 32,
-                    icon: Icon(Icons.pause, color: iconColor),
-                    onPressed: onPressed,
-                  ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      iconSize: 32,
-                      icon: Icon(Icons.play_arrow, color: iconColor),
-                      onPressed: onPressed,
-                    ),
-                    Text("Time left before auto end",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            height: 19.12 / 14.0)),
-                    if (timeUpInMinute != null)
-                      CountdownTimer(
-                        onEnd: () {
-                          onTimeUp?.call();
-                        },
-                        endTime: DateTime.now().millisecondsSinceEpoch +
-                            1000 * 60 * timeUpInMinute!,
-                        widgetBuilder: (context, CurrentRemainingTime? time) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                getRemainingTimeFormat(time),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w400,
-                                    height: 19.12 / 14.0),
-                              ),
+    return isFinished
+        ? Container()
+        : Container(
+            color: Colors.transparent,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                // Always set the iconSize on the IconButton, not on the Icon itself:
+                // https://github.com/flutter/flutter/issues/52980
+                child: isPlaying
+                    ? AnimatedOpacity(
+                        opacity: show ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: IconButton(
+                          iconSize: 32,
+                          icon: Icon(Icons.pause, color: iconColor),
+                          onPressed: onPressed,
+                        ),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            iconSize: 32,
+                            icon: Icon(Icons.play_arrow, color: iconColor),
+                            onPressed: onPressed,
+                          ),
+                          Text("Time left before auto end",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  height: 19.12 / 14.0)),
+                          if (timeUpInMinute != null)
+                            CountdownTimer(
+                              onEnd: () {
+                                onTimeUp?.call();
+                              },
+                              endTime: DateTime.now().millisecondsSinceEpoch +
+                                  1000 * 60 * timeUpInMinute!,
+                              widgetBuilder:
+                                  (context, CurrentRemainingTime? time) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      getRemainingTimeFormat(time),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w400,
+                                          height: 19.12 / 14.0),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          if (timeUpInMinute == null)
+                            IconButton(
+                              iconSize: 32,
+                              icon: Icon(Icons.pause, color: iconColor),
+                              onPressed: onPressed,
+                            ),
+                        ],
                       ),
-                    if (timeUpInMinute == null)
-                      IconButton(
-                        iconSize: 32,
-                        icon: Icon(Icons.pause, color: iconColor),
-                        onPressed: onPressed,
-                      ),
-                  ],
-                ),
-        ),
-      ),
-    );
+              ),
+            ),
+          );
   }
 
   String getRemainingTimeFormat(CurrentRemainingTime? time) {
