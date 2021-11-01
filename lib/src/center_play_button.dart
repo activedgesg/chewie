@@ -60,7 +60,9 @@ class CenterPlayButton extends StatelessWidget {
                           if (timeUpInMinute != null)
                             CountdownTimer(
                               onEnd: () {
-                                onTimeUp?.call();
+                                if (!isFinished) {
+                                  onTimeUp?.call();
+                                }
                               },
                               endTime: DateTime.now().millisecondsSinceEpoch +
                                   1000 * 60 * timeUpInMinute!,
