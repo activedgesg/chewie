@@ -12,6 +12,7 @@ class CenterPlayButton extends StatefulWidget {
     this.onPressed,
     this.onTimeUp,
     this.timeUpInMinute,
+    this.onTick,
   }) : super(key: key);
 
   final Color backgroundColor;
@@ -22,6 +23,7 @@ class CenterPlayButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final VoidCallback? onTimeUp;
   final int? timeUpInMinute;
+  final VoidCallback? onTick;
 
   @override
   State<CenterPlayButton> createState() => _CenterPlayButtonState();

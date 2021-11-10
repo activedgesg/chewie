@@ -20,12 +20,16 @@ class MaterialControls extends StatefulWidget {
     this.showPlayButton = true,
     this.onTimeUp,
     this.timeUpInMinute,
+    this.onPaused,
+    this.onResumed,
     Key? key,
   }) : super(key: key);
 
   final bool showPlayButton;
   final VoidCallback? onTimeUp;
   final int? timeUpInMinute;
+  final VoidCallback? onPaused;
+  final VoidCallback? onResumed;
 
   @override
   State<StatefulWidget> createState() {
@@ -501,12 +505,16 @@ class _MaterialControlsState extends State<MaterialControls>
 
   void _playPause() {
     final isFinished = _latestValue.position >= _latestValue.duration;
-
+    final onPaused = widget.onPaused;
+    final onResumed = widget.onResumed;
     setState(() {
       if (controller.value.isPlaying) {
         notifier.hideStuff = false;
         _hideTimer?.cancel();
         controller.pause();
+        if (onPaused != null) {
+          onPaused();
+        }
       } else {
         _cancelAndRestartTimer();
 
@@ -519,6 +527,9 @@ class _MaterialControlsState extends State<MaterialControls>
             controller.seekTo(const Duration());
           }
           controller.play();
+          if (onResumed != null) {
+            onResumed();
+          }
         }
       }
     });
