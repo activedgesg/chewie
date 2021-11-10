@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/index.dart';
 
-class CenterPlayButton extends StatelessWidget {
+class CenterPlayButton extends StatefulWidget {
   const CenterPlayButton({
     Key? key,
     required this.backgroundColor,
@@ -23,8 +23,31 @@ class CenterPlayButton extends StatelessWidget {
   final int? timeUpInMinute;
 
   @override
+  State<CenterPlayButton> createState() => _CenterPlayButtonState();
+}
+
+class _CenterPlayButtonState extends State<CenterPlayButton> {
+  late CountdownTimerController? controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = CountdownTimerController(
+      endTime: DateTime.now().millisecondsSinceEpoch +
+          1000 * 60 * widget.timeUpInMinute!,
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return isFinished
+    return widget.isFinished
         ? Container()
         : Container(
             color: Colors.transparent,
@@ -33,14 +56,14 @@ class CenterPlayButton extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 // Always set the iconSize on the IconButton, not on the Icon itself:
                 // https://github.com/flutter/flutter/issues/52980
-                child: isPlaying
+                child: widget.isPlaying
                     ? AnimatedOpacity(
-                        opacity: show ? 1.0 : 0.0,
+                        opacity: widget.show ? 1.0 : 0.0,
                         duration: const Duration(milliseconds: 300),
                         child: IconButton(
                           iconSize: 32,
-                          icon: Icon(Icons.pause, color: iconColor),
-                          onPressed: onPressed,
+                          icon: Icon(Icons.pause, color: widget.iconColor),
+                          onPressed: widget.onPressed,
                         ),
                       )
                     : Column(
@@ -48,8 +71,9 @@ class CenterPlayButton extends StatelessWidget {
                         children: [
                           IconButton(
                             iconSize: 32,
-                            icon: Icon(Icons.play_arrow, color: iconColor),
-                            onPressed: onPressed,
+                            icon:
+                                Icon(Icons.play_arrow, color: widget.iconColor),
+                            onPressed: widget.onPressed,
                           ),
                           Text("Time left before auto end",
                               style: TextStyle(
@@ -57,15 +81,13 @@ class CenterPlayButton extends StatelessWidget {
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w400,
                                   height: 19.12 / 14.0)),
-                          if (timeUpInMinute != null)
+                          if (widget.timeUpInMinute != null)
                             CountdownTimer(
                               onEnd: () {
-                                if (!isFinished) {
-                                  onTimeUp?.call();
+                                if (!widget.isFinished) {
+                                  widget.onTimeUp?.call();
                                 }
                               },
-                              endTime: DateTime.now().millisecondsSinceEpoch +
-                                  1000 * 60 * timeUpInMinute!,
                               widgetBuilder:
                                   (context, CurrentRemainingTime? time) {
                                 return Padding(
@@ -85,11 +107,11 @@ class CenterPlayButton extends StatelessWidget {
                                 );
                               },
                             ),
-                          if (timeUpInMinute == null)
+                          if (widget.timeUpInMinute == null)
                             IconButton(
                               iconSize: 32,
-                              icon: Icon(Icons.pause, color: iconColor),
-                              onPressed: onPressed,
+                              icon: Icon(Icons.pause, color: widget.iconColor),
+                              onPressed: widget.onPressed,
                             ),
                         ],
                       ),
