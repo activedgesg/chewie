@@ -17,7 +17,8 @@ class CenterPlayButton extends StatefulWidget {
   final Color backgroundColor;
   final Color? iconColor;
   final bool show;
-  final bool isPlaying, isFinished;
+  final bool isPlaying;
+  final bool isFinished;
   final VoidCallback? onPressed;
   final VoidCallback? onTimeUp;
   final int? timeUpInMinute;
@@ -32,10 +33,12 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = CountdownTimerController(
-      endTime: DateTime.now().millisecondsSinceEpoch +
-          1000 * 60 * widget.timeUpInMinute!,
-    );
+    if (widget.timeUpInMinute != null) {
+      controller = CountdownTimerController(
+        endTime: DateTime.now().millisecondsSinceEpoch +
+            1000 * 60 * widget.timeUpInMinute!,
+      );
+    }
   }
 
   @override
