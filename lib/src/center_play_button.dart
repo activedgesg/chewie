@@ -121,9 +121,11 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                                 if (widget.onPressed != null) {
                                   widget.onPressed!();
                                 }
-                                controller?.endTime =
-                                    DateTime.now().millisecondsSinceEpoch +
-                                        1000 * 60 * widget.timeUpInMinute!;
+                                if (controller != null) {
+                                  controller?.endTime =
+                                      DateTime.now().millisecondsSinceEpoch +
+                                          1000 * 60 * widget.timeUpInMinute!;
+                                }
                               },
                             ),
                         ],
