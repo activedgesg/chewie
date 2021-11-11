@@ -93,6 +93,7 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                                   widget.onTimeUp?.call();
                                 }
                               },
+                              controller: controller,
                               widgetBuilder:
                                   (context, CurrentRemainingTime? time) {
                                 return Padding(
