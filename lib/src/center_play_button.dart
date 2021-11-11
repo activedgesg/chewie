@@ -117,7 +117,14 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                             IconButton(
                               iconSize: 32,
                               icon: Icon(Icons.pause, color: widget.iconColor),
-                              onPressed: widget.onPressed,
+                              onPressed: () {
+                                if (widget.onPressed != null) {
+                                  widget.onPressed!();
+                                }
+                                controller?.endTime =
+                                    DateTime.now().millisecondsSinceEpoch +
+                                        1000 * 60 * widget.timeUpInMinute!;
+                              },
                             ),
                         ],
                       ),
