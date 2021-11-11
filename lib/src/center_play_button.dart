@@ -35,12 +35,10 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.timeUpInMinute != null) {
-      controller = CountdownTimerController(
-        endTime: DateTime.now().millisecondsSinceEpoch +
-            1000 * 60 * widget.timeUpInMinute!,
-      );
-    }
+    controller = CountdownTimerController(
+      endTime: DateTime.now().millisecondsSinceEpoch +
+          1000 * 60 * widget.timeUpInMinute!,
+    );
   }
 
   @override
