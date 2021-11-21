@@ -1,8 +1,7 @@
-import 'package:chewie_example/app/theme.dart';
-import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
+import 'package:chewie_example/app/theme.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class ChewieDemo extends StatefulWidget {
@@ -104,7 +103,12 @@ class _ChewieDemoState extends State<ChewieDemo> {
       videoPlayerController: _videoPlayerController1,
       autoPlay: true,
       looping: true,
-
+      customControls: MaterialControls(
+        onTimeUp: () {},
+        timeUpInSecond: 5,
+        onPaused: () {},
+        onResumed: () {},
+      ),
       subtitle: Subtitles(subtitles),
       subtitleBuilder: (context, dynamic subtitle) => Container(
         padding: const EdgeInsets.all(10.0),

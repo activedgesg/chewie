@@ -11,7 +11,7 @@ class CenterPlayButton extends StatefulWidget {
     required this.isFinished,
     this.onPressed,
     this.onTimeUp,
-    this.timeUpInMinute,
+    this.timeUpInSecond,
     this.onTick,
   }) : super(key: key);
 
@@ -22,7 +22,7 @@ class CenterPlayButton extends StatefulWidget {
   final bool isFinished;
   final VoidCallback? onPressed;
   final VoidCallback? onTimeUp;
-  final int? timeUpInMinute;
+  final int? timeUpInSecond;
   final VoidCallback? onTick;
 
   @override
@@ -30,21 +30,16 @@ class CenterPlayButton extends StatefulWidget {
 }
 
 class _CenterPlayButtonState extends State<CenterPlayButton> {
-  late CountdownTimerController? controller;
+  int? endTime;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = CountdownTimerController(
-      endTime: DateTime.now().millisecondsSinceEpoch +
-          1000 * 60 * widget.timeUpInMinute!,
-    );
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    controller?.dispose();
     super.dispose();
   }
 
@@ -66,7 +61,18 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                         child: IconButton(
                           iconSize: 32,
                           icon: Icon(Icons.pause, color: widget.iconColor),
-                          onPressed: widget.onPressed,
+                          onPressed: () {
+                            if (widget.onPressed != null) {
+                              widget.onPressed!();
+                            }
+                            endTime = DateTime.now().millisecondsSinceEpoch +
+                                1000 * widget.timeUpInSecond!;
+                            setState(() {});
+                            // controller ??= CountdownTimerController(
+                            //   endTime: DateTime.now().millisecondsSinceEpoch +
+                            //       1000 * widget.timeUpInSecond!,
+                            // );
+                          },
                         ),
                       )
                     : Column(
@@ -76,22 +82,31 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                             iconSize: 32,
                             icon:
                                 Icon(Icons.play_arrow, color: widget.iconColor),
-                            onPressed: widget.onPressed,
+                            onPressed: () {
+                              if (widget.onPressed != null) {
+                                widget.onPressed!();
+                              }
+                              endTime = null;
+                              setState(() {});
+                            },
                           ),
-                          Text("Time left before auto end",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w400,
-                                  height: 19.12 / 14.0)),
-                          if (widget.timeUpInMinute != null)
+                          const Text(
+                            "Time left before auto end",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              height: 19.12 / 14.0,
+                            ),
+                          ),
+                          if (endTime != null)
                             CountdownTimer(
+                              endTime: endTime,
                               onEnd: () {
                                 if (!widget.isFinished) {
                                   widget.onTimeUp?.call();
                                 }
                               },
-                              controller: controller,
                               widgetBuilder:
                                   (context, CurrentRemainingTime? time) {
                                 return Padding(
@@ -111,19 +126,15 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                                 );
                               },
                             ),
-                          if (widget.timeUpInMinute == null)
+                          if (widget.timeUpInSecond == null)
                             IconButton(
                               iconSize: 32,
                               icon: Icon(Icons.pause, color: widget.iconColor),
                               onPressed: () {
-                                if (widget.onPressed != null) {
-                                  widget.onPressed!();
+                                if (widget.onPressed == null) {
+                                  return;
                                 }
-                                if (controller != null) {
-                                  controller?.endTime =
-                                      DateTime.now().millisecondsSinceEpoch +
-                                          1000 * 60 * widget.timeUpInMinute!;
-                                }
+                                widget.onPressed!();
                               },
                             ),
                         ],

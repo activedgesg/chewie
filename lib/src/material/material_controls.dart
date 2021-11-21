@@ -19,7 +19,7 @@ class MaterialControls extends StatefulWidget {
   const MaterialControls({
     this.showPlayButton = true,
     this.onTimeUp,
-    this.timeUpInMinute,
+    this.timeUpInSecond,
     this.onPaused,
     this.onResumed,
     Key? key,
@@ -27,7 +27,7 @@ class MaterialControls extends StatefulWidget {
 
   final bool showPlayButton;
   final VoidCallback? onTimeUp;
-  final int? timeUpInMinute;
+  final int? timeUpInSecond;
   final VoidCallback? onPaused;
   final VoidCallback? onResumed;
 
@@ -376,7 +376,7 @@ class _MaterialControlsState extends State<MaterialControls>
         isPlaying: controller.value.isPlaying,
         show: showPlayButton,
         onPressed: _playPause,
-        timeUpInMinute: widget.timeUpInMinute,
+        timeUpInSecond: widget.timeUpInSecond,
         onTimeUp: widget.onTimeUp,
       ),
     );
