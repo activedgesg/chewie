@@ -40,7 +40,7 @@ class _ChewieDemoState extends State<ChewieDemo> {
 
   Future<void> initializePlayer() async {
     _videoPlayerController1 = VideoPlayerController.network(
-        'https://assets.mixkit.co/videos/preview/mixkit-daytime-city-traffic-aerial-view-56-large.mp4');
+        'https://s3.ap-southeast-1.amazonaws.com/assets.activedge.sg/ExerciseVideo/1637717743771GUV2F6AGQAZ2S33K.mp4');
     _videoPlayerController2 = VideoPlayerController.network(
         'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4');
     await Future.wait([
@@ -104,7 +104,9 @@ class _ChewieDemoState extends State<ChewieDemo> {
       autoPlay: true,
       looping: true,
       customControls: MaterialControls(
-        onTimeUp: () {},
+        onTimeUp: () {
+          print("TIMEUP");
+        },
         timeUpInSecond: 5,
         onPaused: () {},
         onResumed: () {},

@@ -30,17 +30,29 @@ class CenterPlayButton extends StatefulWidget {
 }
 
 class _CenterPlayButtonState extends State<CenterPlayButton> {
-  int? endTime;
+  late CountdownTimerController? controller;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    controller = CountdownTimerController(
+      onEnd: onEndCallback,
+      endTime:
+          DateTime.now().millisecondsSinceEpoch + 1000 * widget.timeUpInSecond!,
+    );
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    controller?.dispose();
     super.dispose();
+  }
+
+  void onEndCallback() {
+    if (!widget.isFinished) {
+      widget.onTimeUp?.call();
+    }
   }
 
   @override
@@ -65,13 +77,14 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                             if (widget.onPressed != null) {
                               widget.onPressed!();
                             }
-                            endTime = DateTime.now().millisecondsSinceEpoch +
-                                1000 * widget.timeUpInSecond!;
-                            setState(() {});
-                            // controller ??= CountdownTimerController(
-                            //   endTime: DateTime.now().millisecondsSinceEpoch +
-                            //       1000 * widget.timeUpInSecond!,
-                            // );
+                            if (controller != null) {
+                              final endTime =
+                                  DateTime.now().millisecondsSinceEpoch +
+                                      1000 * widget.timeUpInSecond!;
+                              controller?.endTime = endTime;
+                              controller?.start();
+                              setState(() {});
+                            }
                           },
                         ),
                       )
@@ -79,37 +92,31 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            iconSize: 32,
-                            icon:
-                                Icon(Icons.play_arrow, color: widget.iconColor),
-                            onPressed: () {
-                              if (widget.onPressed != null) {
-                                widget.onPressed!();
-                              }
-                              endTime = DateTime.now()
-                                      .add(Duration(days: 1))
-                                      .millisecondsSinceEpoch +
-                                  1000 * widget.timeUpInSecond!;
-                              setState(() {});
-                            },
-                          ),
-                          const Text(
-                            "Time left before auto end",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              height: 19.12 / 14.0,
-                            ),
-                          ),
-                          if (endTime != null)
-                            CountdownTimer(
-                              endTime: endTime,
-                              onEnd: () {
-                                if (!widget.isFinished) {
-                                  widget.onTimeUp?.call();
+                              iconSize: 32,
+                              icon: Icon(Icons.play_arrow,
+                                  color: widget.iconColor),
+                              onPressed: () {
+                                final endTime =
+                                    DateTime.now().millisecondsSinceEpoch +
+                                        1000 * widget.timeUpInSecond! * 60 * 60;
+                                controller?.endTime = endTime;
+
+                                controller?.start();
+                                if (widget.onPressed == null) {
+                                  return;
                                 }
-                              },
+                                widget.onPressed!();
+                                setState(() {});
+                              }),
+                          Text("Time left before auto end",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  height: 19.12 / 14.0)),
+                          if (widget.timeUpInSecond != null)
+                            CountdownTimer(
+                              controller: controller,
                               widgetBuilder:
                                   (context, CurrentRemainingTime? time) {
                                 return Padding(
@@ -131,15 +138,10 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                             ),
                           if (widget.timeUpInSecond == null)
                             IconButton(
-                              iconSize: 32,
-                              icon: Icon(Icons.pause, color: widget.iconColor),
-                              onPressed: () {
-                                if (widget.onPressed == null) {
-                                  return;
-                                }
-                                widget.onPressed!();
-                              },
-                            ),
+                                iconSize: 32,
+                                icon:
+                                    Icon(Icons.pause, color: widget.iconColor),
+                                onPressed: widget.onPressed),
                         ],
                       ),
               ),
