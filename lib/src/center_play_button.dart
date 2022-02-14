@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/index.dart';
 
 class CenterPlayButton extends StatefulWidget {
-  const CenterPlayButton({
-    Key? key,
-    required this.backgroundColor,
-    this.iconColor,
-    required this.show,
-    required this.isPlaying,
-    required this.isFinished,
-    this.onPressed,
-    this.onTimeUp,
-    this.timeUpInSecond,
-    this.onTick,
-  }) : super(key: key);
+  const CenterPlayButton(
+      {Key? key,
+      required this.backgroundColor,
+      this.iconColor,
+      required this.show,
+      required this.isPlaying,
+      required this.isFinished,
+      this.onPressed,
+      this.onTimeUp,
+      this.timeUpInSecond,
+      this.onTick,
+      this.countdownTimerController})
+      : super(key: key);
 
   final Color backgroundColor;
   final Color? iconColor;
@@ -24,28 +25,23 @@ class CenterPlayButton extends StatefulWidget {
   final VoidCallback? onTimeUp;
   final int? timeUpInSecond;
   final VoidCallback? onTick;
+  final CountdownTimerController? countdownTimerController;
 
   @override
   State<CenterPlayButton> createState() => _CenterPlayButtonState();
 }
 
 class _CenterPlayButtonState extends State<CenterPlayButton> {
-  late CountdownTimerController? controller;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    controller = CountdownTimerController(
-      onEnd: onEndCallback,
-      endTime:
-          DateTime.now().millisecondsSinceEpoch + 1000 * widget.timeUpInSecond!,
-    );
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    controller?.dispose();
+    widget.countdownTimerController?.dispose();
     super.dispose();
   }
 
@@ -77,12 +73,14 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                             if (widget.onPressed != null) {
                               widget.onPressed!();
                             }
-                            if (controller != null) {
+
+                            if (widget.countdownTimerController != null) {
                               final endTime =
                                   DateTime.now().millisecondsSinceEpoch +
                                       1000 * widget.timeUpInSecond!;
-                              controller?.endTime = endTime;
-                              controller?.start();
+                              widget.countdownTimerController?.endTime =
+                                  endTime;
+                              widget.countdownTimerController?.start();
                               setState(() {});
                             }
                           },
@@ -96,12 +94,7 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                               icon: Icon(Icons.play_arrow,
                                   color: widget.iconColor),
                               onPressed: () {
-                                final endTime =
-                                    DateTime.now().millisecondsSinceEpoch +
-                                        1000 * widget.timeUpInSecond! * 60 * 60;
-                                controller?.endTime = endTime;
-
-                                controller?.start();
+                                widget.countdownTimerController?.disposeTimer();
                                 if (widget.onPressed == null) {
                                   return;
                                 }
@@ -114,9 +107,10 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.w400,
                                   height: 19.12 / 14.0)),
-                          if (widget.timeUpInSecond != null)
+                          if (widget.timeUpInSecond != null &&
+                              widget.countdownTimerController != null)
                             CountdownTimer(
-                              controller: controller,
+                              controller: widget.countdownTimerController,
                               widgetBuilder:
                                   (context, CurrentRemainingTime? time) {
                                 return Padding(

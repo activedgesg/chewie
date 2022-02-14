@@ -10,6 +10,7 @@ import 'package:chewie/src/material/widgets/options_dialog.dart';
 import 'package:chewie/src/models/subtitle_model.dart';
 import 'package:chewie/src/notifiers/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/index.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -39,6 +40,8 @@ class MaterialControls extends StatefulWidget {
 
 class _MaterialControlsState extends State<MaterialControls>
     with SingleTickerProviderStateMixin {
+  CountdownTimerController? countdownController;
+
   late PlayerNotifier notifier;
   late VideoPlayerValue _latestValue;
   Timer? _hideTimer;
@@ -57,11 +60,21 @@ class _MaterialControlsState extends State<MaterialControls>
 
   // We know that _chewieController is set in didChangeDependencies
   ChewieController get chewieController => _chewieController!;
+  void onEndCallback() {
+    if (widget.onTimeUp != null) {
+      widget.onTimeUp!();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     notifier = Provider.of<PlayerNotifier>(context, listen: false);
+    countdownController = CountdownTimerController(
+      onEnd: onEndCallback,
+      endTime:
+          DateTime.now().millisecondsSinceEpoch + 1000 * widget.timeUpInSecond!,
+    );
   }
 
   @override
@@ -378,6 +391,7 @@ class _MaterialControlsState extends State<MaterialControls>
         onPressed: _playPause,
         timeUpInSecond: widget.timeUpInSecond,
         onTimeUp: widget.onTimeUp,
+        countdownTimerController: countdownController,
       ),
     );
   }
@@ -528,6 +542,7 @@ class _MaterialControlsState extends State<MaterialControls>
           }
           controller.play();
           if (onResumed != null) {
+            countdownController?.disposeTimer();
             onResumed();
           }
         }
