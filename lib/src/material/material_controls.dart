@@ -532,7 +532,7 @@ class _MaterialControlsState extends State<MaterialControls>
         }
       } else {
         _cancelAndRestartTimer();
-
+        countdownController?.disposeTimer();
         if (!controller.value.isInitialized) {
           controller.initialize().then((_) {
             controller.play();
@@ -543,7 +543,6 @@ class _MaterialControlsState extends State<MaterialControls>
           }
           controller.play();
           if (onResumed != null) {
-            countdownController?.disposeTimer();
             onResumed();
           }
         }
@@ -552,9 +551,9 @@ class _MaterialControlsState extends State<MaterialControls>
   }
 
   void _startHideTimer() {
+    countdownController?.disposeTimer();
     _hideTimer = Timer(const Duration(seconds: 3), () {
       setState(() {
-        countdownController?.disposeTimer();
         notifier.hideStuff = true;
       });
     });
