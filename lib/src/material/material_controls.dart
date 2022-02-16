@@ -61,7 +61,7 @@ class _MaterialControlsState extends State<MaterialControls>
   // We know that _chewieController is set in didChangeDependencies
   ChewieController get chewieController => _chewieController!;
   void onEndCallback() {
-    if (widget.onTimeUp != null) {
+    if (widget.onTimeUp != null && countdownController?.isRunning == true) {
       widget.onTimeUp!();
     }
   }
@@ -391,7 +391,6 @@ class _MaterialControlsState extends State<MaterialControls>
         show: showPlayButton,
         onPressed: _playPause,
         timeUpInSecond: widget.timeUpInSecond,
-        onTimeUp: widget.onTimeUp,
         countdownTimerController: countdownController,
       ),
     );

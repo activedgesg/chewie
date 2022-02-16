@@ -10,7 +10,6 @@ class CenterPlayButton extends StatefulWidget {
       required this.isPlaying,
       required this.isFinished,
       this.onPressed,
-      this.onTimeUp,
       this.timeUpInSecond,
       this.onTick,
       this.countdownTimerController})
@@ -22,7 +21,6 @@ class CenterPlayButton extends StatefulWidget {
   final bool isPlaying;
   final bool isFinished;
   final VoidCallback? onPressed;
-  final VoidCallback? onTimeUp;
   final int? timeUpInSecond;
   final VoidCallback? onTick;
   final CountdownTimerController? countdownTimerController;
@@ -43,12 +41,6 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
     // TODO: implement dispose
     widget.countdownTimerController?.dispose();
     super.dispose();
-  }
-
-  void onEndCallback() {
-    if (!widget.isFinished) {
-      widget.onTimeUp?.call();
-    }
   }
 
   @override
