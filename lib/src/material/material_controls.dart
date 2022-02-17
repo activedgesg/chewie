@@ -550,10 +550,10 @@ class _MaterialControlsState extends State<MaterialControls>
   }
 
   void _startHideTimer() {
-    countdownController?.disposeTimer();
     _hideTimer = Timer(const Duration(seconds: 3), () {
       setState(() {
         notifier.hideStuff = true;
+        countdownController?.disposeTimer();
       });
     });
   }

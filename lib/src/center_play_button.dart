@@ -39,7 +39,6 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
   @override
   void dispose() {
     // TODO: implement dispose
-    widget.countdownTimerController?.dispose();
     super.dispose();
   }
 
@@ -86,7 +85,6 @@ class _CenterPlayButtonState extends State<CenterPlayButton> {
                               icon: Icon(Icons.play_arrow,
                                   color: widget.iconColor),
                               onPressed: () {
-                                widget.countdownTimerController?.disposeTimer();
                                 if (widget.onPressed == null) {
                                   return;
                                 }
